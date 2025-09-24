@@ -281,7 +281,7 @@
                                     <option value="D">D - Below Average</option>
                                     </select>
                                     <label for="studentGrade">Grade</label>
-                                    <p id="erorgrade" class="errMessage"></p>
+                                    <p id="error-grade" class="errMessage"></p>
                                 </div>
                                 </div>
 
@@ -299,7 +299,7 @@
                                     <option value="Architecture">Architecture</option>
                                     </select>
                                     <label for="studentCourse">Course</label>
-                                    <p id="erorcourse" class="errMessage"></p>
+                                    <p id="error-course" class="errMessage"></p>
                                 </div>
                                 </div>
 
@@ -587,6 +587,11 @@ function validateGrade(grade){
     if(grade === "") return `grade is required `
     return null 
 }
+
+function validateCourse(course){
+    if(course === "") return `course is required `
+    return null 
+}
 // ===========================
 // TOAST NOTIFICATION FUNCTIONS
 // ===========================
@@ -664,7 +669,8 @@ function FailureMessage(msg) {
       if (field === 'Name') error = validateName(this.value);
       else if (field === 'Email') error = validateEmail(this.value);
       else if (field === 'Phone') error = validatePhone(this.value);
-      else if(field === 'Grade') error=v
+      else if(field === 'Grade') error= validateGrade(this.value);
+      else if(field === 'Course') error = validateCourse(this.value)
       if (error) showError(field.toLowerCase(), error);
       else clearError(field.toLowerCase());
     });
@@ -686,6 +692,8 @@ document.getElementById('studentForm').addEventListener('submit', async function
   const nameError = validateName(name);
   const emailError = validateEmail(email);
   const phoneError = validatePhone(phone);
+  const gradeError = validateGrade(grade)
+  const courseError = validateCourse(course)
 
   let hasErrors = false;
   if (nameError) {
@@ -699,6 +707,14 @@ document.getElementById('studentForm').addEventListener('submit', async function
   if (phoneError) {
     showError('phone', phoneError);
     hasErrors = true;
+  }
+  if(gradeError){
+    showError('grade',gradeError)
+     hasErrors = true;
+  }
+  if(courseError){
+    showError('course',courseError)
+     hasErrors = true;
   }
 
   if (hasErrors) return; // stop submission

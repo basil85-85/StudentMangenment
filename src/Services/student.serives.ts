@@ -27,6 +27,12 @@ export default class StudentService {
   async deleteStudent(id: string): Promise<boolean | null> {
     return await this.repo.delete(id);
   }
+  async existingEmail(email: string): Promise<boolean | null> {
+  if (!email || typeof email !== 'string' || email.trim() === '') {
+    return null; 
+  }
+  return await this.repo.existingEmail(email);
+  }
 }
 
 

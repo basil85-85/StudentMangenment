@@ -2,12 +2,11 @@
   "name": "studemt-mangenment",
   "version": "1.0.0",
   "main": "index.js",
-  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-  "build": "tsc",
-  "start": "node dist/app.js"
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +14,9 @@
   "description": "",
   "dependencies": {
     "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
     "mongoose": "^8.18.1",
     "nodemon": "^3.1.10",
     "typescript": "^5.9.2"
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.3",
-    "@types/nodemon": "^1.19.6"
+    "@types/nodemon": "^1.19.6",
+    "ts-node-dev": "^2.0.0"
   }
 }

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Student</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .card {
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      background: #fff;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .list-group-item {
+      border: none;
+      padding: 15px 20px;
+      font-size: 1rem;
+    }
+
+    .list-group-item:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+
+    .btn {
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-weight: 600;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .modal-content {
+      border-radius: 20px;
+    }
+
+    .modal-header {
+      border-bottom: none;
+    }
+
+    .form-floating input,
+    .form-floating select {
+      border-radius: 10px;
+    }
+     .errMessage {
+            color: red/* or use red directly */
+        }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card p-4">
+      <h3 class="mb-4 text-center text-primary">🎓 Student Profile</h3>
+      
+      <div class="text-center mb-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
+             alt="Student Avatar" width="100" class="rounded-circle shadow-sm">
+      </div>
+
+      <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item"><strong>Name:</strong> <%= student.name %></li>
+        <li class="list-group-item"><strong>Email:</strong> <%= student.email %></li>
+        <li class="list-group-item"><strong>Phone:</strong> <%= student.phone %></li>
+        <li class="list-group-item"><strong>Course:</strong> <%= student.course %></li>
+        <li class="list-group-item"><strong>Grade:</strong> <%= student.grade %></li>
+      </ul>
+
+      <div class="d-flex justify-content-center gap-3">
+        <a href="/" class="btn btn-outline-secondary">⬅ Back</a>
+         <button
+                                                class="btn btn-sm btn-outline-primary edit-btn"
+                                                data-id="<%= student._id || student.id %>"
+                                                data-name="<%= student.name %>"
+                                                data-email="<%= student.email %>"
+                                                data-phone="<%= student.phone || '' %>"
+                                                data-grade="<%= student.grade %>"
+                                                data-course="<%= student.course %>"
+                                                title="Edit Student">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+   <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Student</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editStudentForm" novalidate>
+                        <input type="hidden" id="editStudentId">
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="editStudentName" required>
+                            <label>Full Name</label>
+                            <p class="errMessage" id="error-name"></p>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="editStudentEmail" required>
+                            <label>Email Address</label>
+                            <p class="errMessage" id="error-email"></p>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control" id="editStudentPhone">
+                            <label>Phone Number (Optional)</label>
+                            <p class="errMessage" id="error-phone"></p>
+                        </div>
+                        
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="editStudentGrade" required>
+                                        <option value="">Select Grade</option>
+                                        <option value="A">A - Excellent</option>
+                                        <option value="B">B - Good</option>
+                                        <option value="C">C - Average</option>
+                                        <option value="D">D - Below Average</option>
+                                    </select>
+                                    <label>Grade</label>
+                                    <p class="errMessage" id="error-grade"></p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="editStudentCourse" required>
+                                        <option value="">Select Course</option>
+                                        <option value="Computer Engineering">Computer Engineering</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Electrical Engineering">Electrical Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                        <option value="Electronics & Communication">Electronics & Communication</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Chemical Engineering">Chemical Engineering</option>
+                                        <option value="Architecture">Architecture</option>
+                                    </select>
+                                    <label>Course</label>
+                                    <p class="errMessage" id="error-course"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveEditBtn">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!-- Scripts -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+   
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// ===========================
+// ERROR HANDLING FUNCTIONS
+// ===========================
+
+// Show error message & add error class
+function showError(fieldId, message) {
+  const errorElement = document.getElementById(`error-${fieldId.toLowerCase()}`);
+  const inputElement = document.getElementById(`student${capitalizeFirstLetter(fieldId)}`);
+
+  if (errorElement) errorElement.textContent = message;
+  if (inputElement) {
+    inputElement.classList.add('error');
+    inputElement.classList.remove('success');
+  }
+}
+
+// Clear error message & add success class
+function clearError(fieldId) {
+  const errorElement = document.getElementById(`error-${fieldId.toLowerCase()}`);
+  const inputElement = document.getElementById(`student${capitalizeFirstLetter(fieldId)}`);
+
+  if (errorElement) errorElement.textContent = '';
+  if (inputElement) {
+    inputElement.classList.remove('error');
+    inputElement.classList.add('success');
+  }
+}
+
+// Clear all errors & input styles
+function clearAllErrors() {
+  const errorElements = document.querySelectorAll('.errMessage');
+  const inputs = document.querySelectorAll('input, select');
+
+  errorElements.forEach(el => (el.textContent = ''));
+  inputs.forEach(input => {
+    input.classList.remove('error', 'success');
+  });
+}
+
+// ===========================
+// VALIDATION FUNCTIONS
+// ===========================
+
+function validateName(name) {
+  if (!name.trim()) return 'Name is required';
+  if (name.trim().length < 2) return 'Name must be at least 2 characters long';
+  return null;
+}
+
+function validateEmail(email) {
+  if (!email.trim()) return 'Email is required';
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return 'Please enter a valid email address';
+  return null;
+}
+
+function validatePhone(phone) {
+  if (!phone.trim()) return null; // optional phone
+  const phoneRegex = /^\+?[\d\s\-\(\)]+$/;
+  if (!phoneRegex.test(phone) || phone.replace(/\D/g, '').length < 10) return 'Please enter a valid phone number';
+  return null;
+}
+
+// ===========================
+// TOAST NOTIFICATION FUNCTIONS
+// ===========================
+
+let currentToast;
+
+function SuccessMessage(msg) {
+  if (currentToast) currentToast.close();
+
+  currentToast = Swal.fire({
+    icon: 'success',
+    title: msg,
+    toast: true,
+    position: 'top-end',
+    timer: 3000,
+    showConfirmButton: false,
+    timerProgressBar: true,
+    background: '#d4edda',
+    color: '#155724',
+    iconColor: '#28a745',
+    customClass: {
+      popup: 'swal-toast'
+    },
+    didOpen: (toast) => {
+      toast.style.zIndex = '9999';
+      toast.style.borderRadius = '8px';
+      toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      toast.style.borderLeft = '4px solid #28a745';
+    },
+    willClose: () => { currentToast = null; }
+  });
+  
+  currentToast.then(() => {
+    window.location.reload();  // Reload page after the toast
+  });
+}
+
+function FailureMessage(msg) {
+  if (currentToast) currentToast.close();
+
+  currentToast = Swal.fire({
+    icon: 'warning',
+    title: msg,
+    toast: true,
+    position: 'top-end',
+    timer: 3000,
+    showConfirmButton: false,
+    timerProgressBar: true,
+    background: '#fff3cd',
+    color: '#856404',
+    iconColor: '#ffc107',
+    customClass: {
+      popup: 'swal-toast'
+    },
+    didOpen: (toast) => {
+      toast.style.zIndex = '9999';
+      toast.style.borderRadius = '8px';
+      toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      toast.style.borderLeft = '4px solid #ffc107';
+    },
+    willClose: () => { currentToast = null; }
+  });
+}
+
+// ===========================
+// ADD STUDENT FORM HANDLING
+// ===========================
+
+// Real-time validation for add form
+['Name', 'Email', 'Phone'].forEach(field => {
+  const input = document.getElementById(`student${field}`);
+  if (input) {
+    input.addEventListener('blur', function () {
+      let error = null;
+      if (field === 'Name') error = validateName(this.value);
+      else if (field === 'Email') error = validateEmail(this.value);
+      else if (field === 'Phone') error = validatePhone(this.value);
+
+      if (error) showError(field.toLowerCase(), error);
+      else clearError(field.toLowerCase());
+    });
+  }
+});
+
+// EDIT STUDENT MODAL HANDLING
+// ===========================
+
+// Handle edit button click to populate modal
+const editButtons2 = document.querySelectorAll('.edit-btn');
+const editModal2 = new bootstrap.Modal(document.getElementById('editModal'));
+
+editButtons2.forEach(button => {
+  button.addEventListener('click', () => {
+    // Get data attributes from the button
+    const id = button.dataset.id;
+    const name = button.dataset.name;
+    const email = button.dataset.email;
+    const phone = button.dataset.phone;
+    const grade = button.dataset.grade;
+    const course = button.dataset.course;
+
+    // Fill the modal inputs
+    document.getElementById('editStudentId').value = id;
+    document.getElementById('editStudentName').value = name;
+    document.getElementById('editStudentEmail').value = email;
+    document.getElementById('editStudentPhone').value = phone;
+    document.getElementById('editStudentGrade').value = grade;
+    document.getElementById('editStudentCourse').value = course;
+
+    // Show the modal
+    editModal2.show();
+  });
+});
+
+// ===========================
+// EDIT FORM VALIDATION & SUBMISSION
+// ===========================
+
+// Single function for edit form validation and submission
+document.getElementById('saveEditBtn').addEventListener('click', async function() {
+  // Clear previous errors
+  document.querySelectorAll('.errMessage').forEach(el => el.textContent = '');
+  document.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
+  
+  // Get form values
+  const name = document.getElementById('editStudentName').value.trim();
+  const email = document.getElementById('editStudentEmail').value.trim();
+  const phone = document.getElementById('editStudentPhone').value.trim();
+  const grade = document.getElementById('editStudentGrade').value;
+  const course = document.getElementById('editStudentCourse').value;
+  
+  let isValid = true;
+  
+  // Validate using existing validation functions
+  const nameError = validateName(name);
+  const emailError = validateEmail(email);
+  const phoneError = validatePhone(phone);
+  
+  // Show errors
+  if (nameError) {
+    document.getElementById('editStudentName').classList.add('is-invalid');
+    document.getElementById('error-name').textContent = nameError;
+    isValid = false;
+  }
+  
+  if (emailError) {
+    document.getElementById('editStudentEmail').classList.add('is-invalid');
+    document.getElementById('error-email').textContent = emailError;
+    isValid = false;
+  }
+  
+  if (phoneError) {
+    document.getElementById('editStudentPhone').classList.add('is-invalid');
+    document.getElementById('error-phone').textContent = phoneError;
+    isValid = false;
+  }
+  
+  if (!grade) {
+    document.getElementById('editStudentGrade').classList.add('is-invalid');
+    document.getElementById('error-grade').textContent = 'Please select a grade';
+    isValid = false;
+  }
+  
+  if (!course) {
+    document.getElementById('editStudentCourse').classList.add('is-invalid');
+    document.getElementById('error-course').textContent = 'Please select a course';
+    isValid = false;
+  }
+  
+  // If validation fails, stop here
+  if (!isValid) return;
+  
+  // If validation passes, submit to backend
+  const studentId = document.getElementById('editStudentId').value;
+  const formData = { name, email, phone, grade, course };
+  
+  try {
+    // Show loading state
+    this.disabled = true;
+    this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+    
+    // Send to backend
+    const response = await fetch(`/students/${studentId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    
+    if (response.ok) {
+      // Success - close modal and show success message
+      bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+      SuccessMessage('Student updated successfully!');
+    } else {
+      FailureMessage('Try other email');
+    }
+  } catch (error) {
+    FailureMessage('Error: ' + error.message);
+  } finally {
+    // Reset button state
+    this.disabled = false;
+    this.innerHTML = '<i class="fas fa-save me-2"></i>Save Changes';
+  }
+});
+
+
+  </script>
+</body>
+</html>

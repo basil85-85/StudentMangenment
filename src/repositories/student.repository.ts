@@ -1,3 +1,4 @@
+import { promises } from "dns";
 import { StudentModel, StudentDoc } from "../Models/student.model";
 import { StudentRequest, StudentResponse } from "../dtos/student.dto";
 import { Types } from "mongoose"
@@ -28,6 +29,10 @@ export default class StudentRepository {
   async delete(id: string): Promise<boolean> {
     const result = await StudentModel.findByIdAndDelete(id);
     return result ? true : false;
+  }
+  async existingEmail(email: string): Promise<boolean> {
+    const student = await StudentModel.findOne({ email }).lean();
+    return !!student;
   }
 
   private toResponse(student: StudentDoc): StudentResponse {

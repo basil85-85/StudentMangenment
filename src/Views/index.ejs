@@ -729,8 +729,8 @@ document.getElementById('studentForm').addEventListener('submit', async function
       },
       body: JSON.stringify(formData)
     });
-
-    if (!response.ok) throw new Error('Failed to submit form');
+  console.log(response)
+    if (!response.ok) FailureMessage('email aready exiting')
    
     const result = await response.json();
     console.log(result)
@@ -741,12 +741,12 @@ document.getElementById('studentForm').addEventListener('submit', async function
       clearAllErrors();
     }
     else{
-      FailureMessage(`Something went wrong`)
+      FailureMessage(result.message)
     }
 
   } catch (error) {
     console.error('Error:', error);
-    FailureMessage('There was an error submitting the form.')
+    FailureMessage('Server error Invaild')
   }
 });
 
@@ -860,10 +860,10 @@ document.getElementById('saveEditBtn').addEventListener('click', async function(
       bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
       SuccessMessage('Student updated successfully!');
     } else {
-      FailureMessage('Try other email');
+      FailureMessage('Try other email');      
     }
   } catch (error) {
-    FailureMessage('Error: ' + error.message);
+    FailureMessage('Try other email');
   } finally {
     // Reset button state
     this.disabled = false;
